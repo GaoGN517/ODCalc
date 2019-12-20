@@ -63,11 +63,12 @@ runApp(
                 
                 df <- Data()
                 if(input$All_First == "all") {
-                    df_table <- df_table <- table(df[, c(col_1, col_2)])
+                    df_table <- table(df[, c(col_1, col_2)])
                 }
                 else {
-                    df_table <- df_table <- table(df[(df[, col_1] == var_1 | df[, col_1] == var_2), c(col_1, col_2)])
+                    df_table <- table(df[(df[, col_1] == var_1 | df[, col_1] == var_2), c(col_1, col_2)])
                 }
+                return(df_table)
             })
             
             output$contents <- renderTable({
