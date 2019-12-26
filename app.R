@@ -4,7 +4,7 @@ library(readxl)
 runApp(
     list(
         ui = fluidPage(
-            titlePanel("Use readxl"),
+            titlePanel("Test for homogeneity"),
             sidebarLayout(
                 sidebarPanel(
                     fileInput('file1', 'Choose xlsx file',
@@ -83,9 +83,14 @@ runApp(
             
             output$levels <- renderText({
                 df <- Data()
-                property <- df[, input$First_column]
-                level_prop <- levels(property)
-                paste0("The levels of the property column are: ", level_prop)
+                property <- df[, 1]
+                level_prop <- unique(property)
+                outprint <- level_prop[1, ]
+                for(i in 2:nrow(level_prop)) {
+                    outprint <- paste0(outprint, "; ", level_prop[i, ])
+                }
+                
+                paste0("The ", nrow(level_prop), " levels of the property column are: ", outprint)
             })
             
             output$table <- renderTable({
