@@ -15,17 +15,17 @@ runApp(
                                  choices = c(Head = "head",
                                              All = "all"),
                                  selected = "head"),
-                    textInput("First_column", "No. of Property column:", value = "", width = NULL,
+                    textInput("col1", "No. of Property column:", value = "", width = NULL,
                               placeholder = NULL),
                     radioButtons("All_First", "Test all levels of the property column or pairwise comparison?",
                                  choices = c(All = "all",
                                              Pairwise = "pairwise"),
                                  selected = "all"),
-                    textInput("First_level", "First level of the property column to compare:", value = "", width = NULL,
+                    textInput("lev1", "First level of the property column to compare:", value = "", width = NULL,
                               placeholder = NULL),
-                    textInput("Second_level", "Second level of the property column to compare:", value = "", width = NULL,
+                    textInput("lev2", "Second level of the property column to compare:", value = "", width = NULL,
                               placeholder = NULL),
-                    textInput("Second_column", "No. of Result column:", value = "", width = NULL,
+                    textInput("col2", "No. of Result column:", value = "", width = NULL,
                               placeholder = NULL)
                     
                 ),
@@ -56,17 +56,21 @@ runApp(
             })
             
             Table <- reactive({
-                col_1 <- input$First_column
-                col_2 <- input$Second_column
-                var_1 <- input$First_level
-                Var_2 <- input$Second_level
+                Col1 <- as.numeric(input$col1)
+                Col2 <- as.numeric(input$col2)
+                Var1 <- as.numeric(input$lev1)
+                Var2 <- as.numeric(input$lev2)
+                
+                property <- df[, Col1]
+                level_prop <- unique(property)
                 
                 df <- Data()
                 if(input$All_First == "all") {
-                    df_table <- table(df[, c(col_1, col_2)])
+                    df_table <- table(df[, c(Col1, Col2)])
                 }
                 else {
-                    df_table <- table(df[(df[, col_1] == var_1 | df[, col_1] == var_2), c(col_1, col_2)])
+                    df_table <- table(df[(df[, Col1] == as.character(level_prop[Var1, ]) | df[, Col1] == 
+                                              as.character(level_prop[Var2, ])), c(Col1, Col2)])
                 }
                 return(df_table)
             })
@@ -83,7 +87,7 @@ runApp(
             
             output$levels <- renderText({
                 df <- Data()
-                property <- df[, 1]
+                property <- df[, as.numeric(input$col1)]
                 level_prop <- unique(property)
                 outprint <- level_prop[1, ]
                 for(i in 2:nrow(level_prop)) {
@@ -99,7 +103,9 @@ runApp(
             
             output$fisherTest <- renderText({
                 df <- Data()
-                df_table <- table(df[, c(col_1, col_2)])
+                Col1 <- as.numeric(input$col1)
+                Col2 <- as.numeric(input$col2)
+                df_table <- table(df[, c(Col1, Col2)])
                 p_value <- round(fisher.test(table)$p.value, 5)
                 return(paste0("p value is: ", p_value))
             })
