@@ -1,1 +1,2 @@
-# ShinyODCalc
+# The Shiny application for doing t tests, chi-square tests, Fisher's exact tests...
+This is the web application for doing the most comment tests in research. 
